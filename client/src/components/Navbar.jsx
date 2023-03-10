@@ -1,11 +1,11 @@
 
 const NavBar =()=>{
 return(
-    <div className="h-16 w-screen flex flex-auto justify-around items-center border-b-2 border-white ">
+    <div className="h-16 w-screen flex flex-auto justify-around items-center border-b border-gray-100 ">
         <div>
 
         </div>
-        <div className=" flex flex-row justify-evenly w-80  ">
+        <div className=" flex flex-row justify-evenly w-80 text-white  ">
             <span>
                 Swap
 

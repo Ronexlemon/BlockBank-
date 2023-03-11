@@ -5,7 +5,12 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'eth': "url('../src/assets/Rectangle.png')",
+      },
+    },
+    
    
   },
   plugins: [],

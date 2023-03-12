@@ -8,7 +8,7 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <main className=" bg-[#182268] h-screen">
+    <main className=" bg-[#182268] h-screen ">
       <NavBar/>
       <BackImage/>
      

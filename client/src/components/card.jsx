@@ -1,17 +1,48 @@
-import React,{useState} from "react"
+import React,{useState,useContext} from "react"
 import {MdArrowCircleDown,MdArrowDropDownCircle} from "react-icons/md"
 import Dropdown from 'react-dropdown';
 import ethereum from "../assets/ethereum.png"
 import ethereum2 from "../assets/ethereum2.png"
 import silver from "../assets/silver.jpeg"
 import gold from "../assets/gold.jpg"
+import { SilverokenContractAddress } from "../contractaddress/exportaddress";
+import { GoldTokenContractAddress } from "../contractaddress/exportaddress";
+import { FarmContractAddress } from "../contractaddress/exportaddress";
+import { AppContext } from "../../contexts/AppContext";
+import { FarmAbi } from "../abis/farmContractAbi";
+import { SilverAbi } from "../abis/silverABI";
+import { GoldAbi } from "../abis/goldABI";
+import { ethers } from "ethers";
 
 const Card = () =>{
+  const [amount, setAmount] = useState('');
+  const handleInputChange = (event) => {
+    setAmount(event.target.value);
+  }
+  const {
+    getProviderOrSigner,
+    connected,
+    Contract,
+} = useContext(AppContext)
+  const swapBITforGoldToken = async()=>{
+    try{
+      const valueInWei = ethers.utils.parseEther(amount); 
+      console.log("rthers are",valueInWei)
+        const signer = await getProviderOrSigner(true);
+        const farmContract = new Contract(FarmContractAddress,FarmAbi,signer);
+       const transaction =  await farmContract.buyGoldToken(10,{value: valueInWei});
+        await  transaction.wait();
+
+
+    }catch(error){
+        console.log("failed to swap BIT for  gold token",error);
+    }
+}
    
     const [symbolFrom, setSymbolFrom] = React.useState(0);
     const [symbolTo, setSymbolTO] = React.useState(0);
     const cryptos =[
-        'Ether','Gold Token','Silver Token'
+        'Mantle Token','Gold Token','Silver Token'
     ]
     const defaultCryptos = cryptos[0];
     return(
@@ -27,7 +58,7 @@ const Card = () =>{
 <span className="h-5 w-5"> {(symbolFrom == 0)?<img src={ethereum} alt="symbol"/>:(symbolFrom ==1)?<img src={gold} alt="symbol"/>: <img src={silver} alt="symbol"/> } </span>
 
 <span><select className="bg-black text-white" value={symbolFrom} onChange={(event) => setSymbolFrom(event.target.value)}>
-<option value={0}>ETH</option>
+<option value={0}>BIT</option>
  <option value={1}>GLD</option>
 <option value={2}>SLV</option>
             </select></span>
@@ -36,7 +67,8 @@ const Card = () =>{
                   </div>
               
                   <div className=" flex flex-col gap-2 m-4">
-                  <input className="w-full  rounded bg bg-gray-500 text-white h-8"  type="text" placeholder="$ 30.00"/> 
+                  <input className="w-full  rounded bg bg-gray-500 text-white h-8"  type="text" value={amount} 
+      onChange={handleInputChange}  placeholder="$ 30.00"/> 
                   <div className="flex justify-start gap-2">
                     <h5>Balance</h5>
                     <span>0.79</span>
@@ -58,7 +90,7 @@ const Card = () =>{
 
 <span><select className="bg-black text-white" value={symbolTo} onChange={(event) => setSymbolTO(event.target.value)}>
 
-<option value={2}>ETH</option> 
+<option value={2}>BIT</option> 
 <option value={1}>GLD</option>
 <option value={0}>SLV</option>
             </select></span>
@@ -77,7 +109,7 @@ const Card = () =>{
                   </div>
                   </div>
                   <div className="text-white ml-4 mr-4">
-                    <button className="w-full bg-blue-500 rounded  ">Transfer</button>
+                    <button onClick={()=>{swapBITforGoldToken()}} className="w-full bg-blue-500 rounded  ">Transfer</button>
 
                 </div>
 

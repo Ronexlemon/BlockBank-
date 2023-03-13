@@ -8,7 +8,7 @@ async function main(){
     //deploy the contrats
     const GoldTokenContractDeploy = await GoldTokenContract.deploy();
     const SilverTokenContractDeploy = await SilverTokenContract.deploy()
-    const farmContractDeploy = await farmContract.deploy()
+    const farmContractDeploy = await farmContract.deploy(GoldTokenContractDeploy.address, SilverTokenContractDeploy.address)
     //await deployments
     await GoldTokenContractDeploy.deployed()
     await SilverTokenContractDeploy.deployed()

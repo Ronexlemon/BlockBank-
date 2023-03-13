@@ -58,6 +58,7 @@ web3ModalRef.current =new Web3Modal({
     <AppContext.Provider value={{
       getProviderOrSigner,
       connected,
+      Contract,
       
     }}>
 <main className=" bg-[#182268] h-screen ">

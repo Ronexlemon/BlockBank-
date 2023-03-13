@@ -2,11 +2,42 @@ import React,{useState, useRef,useEffect,useContext} from "react";
 import Web3Modal from "web3modal"
 import {providers,Contract} from "ethers"
 import { AppContext } from "../../contexts/AppContext";
+import { SilverokenContractAddress } from "../contractaddress/exportaddress";
+import { GoldTokenContractAddress } from "../contractaddress/exportaddress";
+import { FarmContractAddress } from "../contractaddress/exportaddress";
+import { SilverAbi } from "../abis/silverABI";
+import { GoldAbi } from "../abis/goldABI";
+import { FarmAbi } from "../abis/farmContractAbi";
 const NavBar =()=>{
     const {
         getProviderOrSigner,
         connected,
+        Contract,
     } = useContext(AppContext)
+    const mintGoldToken = async()=>{
+        try{
+            const signer = await getProviderOrSigner(true);
+            const goldContract = new Contract(GoldTokenContractAddress,GoldAbi,signer);
+            await goldContract.mintGoldTokens(FarmContractAddress,10000);
+
+
+        }catch(error){
+            console.log("failed to mint gold token",error);
+        }
+    }
+    const mintSilverToken = async()=>{
+        try{
+            const signer = await getProviderOrSigner(true);
+            const silverContract = new Contract(SilverokenContractAddress,SilverAbi,signer);
+            await silverContract.mintSilverTokens(FarmContractAddress,10000);
+
+
+        }catch(error){
+            console.log("failed to mint silver token",error);
+        }
+    }
+    
+    
     // const [connected, setConnected] = useState(false)
     // const web3ModalRef = useRef();
 
@@ -43,12 +74,13 @@ return(
         <div className=" flex flex-row justify-evenly w-80 text-white  ">
             <span>
                 Swap
-{console.log("connected is",connected)}
+{console.log("connected is",SilverokenContractAddress)}
             </span>
             <span>
                 Earn
                 
             </span>
+           
             <span>
                 Buy Crypto
                 

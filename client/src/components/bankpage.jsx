@@ -7,13 +7,15 @@ import silver from "../assets/silver.jpeg"
 import gold from "../assets/gold.jpg"
 import ethereum2 from "../assets/ethereum2.png"
 import ethereum from "../assets/ethereum.png"
+import { ethers } from 'ethers'
 
 
 import { AppContext } from '../../contexts/AppContext'
 import { GoldAbi } from '../abis/goldABI'
 import { SilverAbi } from '../abis/silverABI'
+import { FarmAbi } from '../abis/farmContractAbi'
 import { FarmContractAddress } from '../contractaddress/exportaddress'
-import { FarmContractAddress } from '../contractaddress/exportaddress'
+
 import { SilverokenContractAddress } from '../contractaddress/exportaddress'
 import { GoldTokenContractAddress } from '../contractaddress/exportaddress'
 
@@ -43,7 +45,75 @@ const options =[
     
   }
   
+  const depoistTokens = async()=>{
+    try{
+      const valueInWei = ethers.utils.parseEther(amount); 
+      const tokenamount = parseInt(amount)
+      const signer = await getProviderOrSigner(true);
+
+      
+      
+        const farmContract = new Contract(FarmContractAddress,FarmAbi,signer);
+        if(choice  === 0){
+           const transaction = await farmContract.depositEthToken({value: valueInWei});
+           await transaction.wait();
+          
+        }
+        else if(choice === 1){
+          const transaction = await farmContract.depositGoldToken(tokenamount);
+           await transaction.wait();
+          
+        }
+        else if(choice === 2){
+          const transaction = await farmContract.depositSilverToken(tokenamount);
+           await transaction.wait();
+          
   
+        }
+        else{
+          alert("please select token")
+        }
+  
+  
+  }catch(error){
+      console.log("failed to mint gold token",error);
+  }
+  }
+  
+  const borrowTokens = async()=>{
+    try{
+      const valueInWei = ethers.utils.parseEther(amount); 
+      const tokenamount = parseInt(amount)
+      const signer = await getProviderOrSigner(true);
+
+      
+      
+        const farmContract = new Contract(FarmContractAddress,FarmAbi,signer);
+        if(choice  === 0){
+           const transaction = await farmContract.borrowEthToken({value: valueInWei});
+           await transaction.wait();
+          
+        }
+        else if(choice === 1){
+          const transaction = await farmContract.borrowGoldToken(tokenamount);
+           await transaction.wait();
+          
+        }
+        else if(choice === 2){
+          const transaction = await farmContract.borrowSilverToken(tokenamount);
+           await transaction.wait();
+          
+  
+        }
+        else{
+          alert("please select token")
+        }
+  
+  
+  }catch(error){
+      console.log("failed to mint gold token",error);
+  }
+  }
   
 
   return (
@@ -82,13 +152,13 @@ const options =[
       />
     </div>
     <div className="flex items-center justify-between gap-2">
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+      <button onClick={()=>{depoistTokens()}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
         Deposit
       </button>
-      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-        Withdraw
+      <button >
+        
       </button>
-      <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+      <button  onClick={()=>{borrowTokens()}} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
         Borrow
       </button>
     </div>

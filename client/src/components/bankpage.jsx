@@ -14,14 +14,18 @@ import { AppContext } from '../../contexts/AppContext'
 function Bank() {
     const [symbolFrom, setSymbolFrom] = useState(0);
   const [symbolTo, setSymbolTO] = useState(0);
+  const [choice, setChoice] = useState(0);
   const [count, setCount] = useState(0)
   const cryptos =[
     'Mantle Token','Gold Token','Silver Token'
 ]
+const options =[
+    0,1,2 , //BIT , Gold ,Silver
+  ]
   // const [connected, setConnected] = useState(false)
   const handleOptionChange = (event) => {
     setSymbolFrom(event.target.value)
-    // setChoice(options[event.target.value])
+ setChoice(options[event.target.value])
     
   }
   
@@ -64,7 +68,7 @@ web3ModalRef.current =new Web3Modal({
     
   <div className="flex justify-between  items-center m-4 ">
                     <div>
-                        
+                        {console.log("error  choic e",choice)}
                     <h5>Token : {(symbolFrom == 0)?cryptos[0]   :(symbolFrom ==1)?cryptos[1] : cryptos[2] }</h5>
                     </div>
                     <div className="flex justify-end items-center gap-2">

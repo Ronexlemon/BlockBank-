@@ -1,12 +1,7 @@
 import { RiCommunityFill } from "react-icons/ri";
 import { FcDataEncryption } from "react-icons/fc";
 import { FcBullish } from "react-icons/fc";
-// import Swapit from "./assets/Swapit.png"
-// import swapbit from "../assets/swapbit"
-// import swaptk from "../assets/swaptk"
-import swapbit from "../assets/swapbit.png"
-import swapit from "../assets/swapit.png"
-import bank from "../assets/bank.png"
+
 import wallet from "../assets/wallet.svg"
 
 

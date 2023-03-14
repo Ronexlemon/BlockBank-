@@ -24,7 +24,7 @@ const Card = () =>{
       'Mantle Token','Gold Token','Silver Token'
   ]
   const options =[
-    0,1,2 , //BIT , Gold Silver
+    0,1,2 , //BIT , Gold ,Silver
   ]
   const optionsto =[
     0,1,2 //silver , gold, BIT
@@ -67,15 +67,23 @@ const Card = () =>{
       }
       else if(from == options[1] && to == optionsto[0] ){ //swaping gold for silver
         const signer = await getProviderOrSigner(true);
-        const goldContract = new Contract(GoldTokenContractAddress,GoldAbi,signer);
-        const approve = await goldContract.approve(FarmContractAddress,ethers.utils.parseEther(amount) )
+        const silverContract = new Contract(SilverokenContractAddress,SilverAbi,signer);
+        const approve = await silverContract.approve(FarmContractAddress,ethers.utils.parseEther(amount) )
         const transaction =  await farmContract.swapGoldTokensForSilver(tokenamount);
         await  transaction.wait();
 
       }
+      else if(from == options[2] && to == optionsto[1] ){ //swaping silver for gold
+        const signer = await getProviderOrSigner(true);
+        const goldContract = new Contract(GoldTokenContractAddress,GoldAbi,signer);
+        const approve = await goldContract.approve(FarmContractAddress,ethers.utils.parseEther(amount) )
+        const transaction =  await farmContract.swapSilverTokensForGold(tokenamount);
+        await  transaction.wait();
 
+      }
+     
       else{
-        alert("please select an option")
+        alert("please you can't swap for same token or an empty amount")
       }
      
         

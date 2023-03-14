@@ -3,6 +3,7 @@ import { FcDataEncryption } from "react-icons/fc";
 import { FcBullish } from "react-icons/fc";
 
 import wallet from "../assets/wallet.svg"
+import locker from "../assets/locker.svg"
 
 
 const Land = ()=>{
@@ -35,8 +36,9 @@ const Land = ()=>{
 
             </div>
             {/* div no 2 */}
-            <div class=" flex justify-center items-center">
-            <img className="h-3/4 w-3/4" src={wallet} alt="no Image"/>
+            <div class=" flex flex-col justify-center items-center">
+            <img className="h-3/4 w-3/4" src={locker} alt="no Image"/>
+            
  
 </div>
 

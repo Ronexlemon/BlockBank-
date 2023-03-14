@@ -6,6 +6,7 @@ import Bank from './Pages/Bank';
 import Web3Modal from "web3modal"
 import {providers,Contract} from "ethers"
 import { AppContext } from '../contexts/AppContext';
+import Accounts from './Pages/Accounts';
 
 function App() {
   const useLocalStorage = (key, initialValue) => {
@@ -64,6 +65,7 @@ web3ModalRef.current =new Web3Modal({
         <Route path="/home" element={<LandingPage/>} />
         <Route path="/swap" element={<Swap/>} />
         <Route path="/bank" element={<Bank/>} />
+        <Route path="/account" element={<Accounts/>} />
       </Routes>
     </Router>
     </AppContext.Provider>

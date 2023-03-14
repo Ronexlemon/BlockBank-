@@ -1,4 +1,4 @@
-import { useState,useRef,useEffect } from 'react'
+import { useState,useRef,useEffect ,useContext} from 'react'
 import Web3Modal from "web3modal"
 import {providers,Contract} from "ethers"
 import NavBar from '../components/Navbar'
@@ -7,15 +7,28 @@ import silver from "../assets/silver.jpeg"
 import gold from "../assets/gold.jpg"
 import ethereum2 from "../assets/ethereum2.png"
 import ethereum from "../assets/ethereum.png"
+import { ethers } from 'ethers'
 
 
 import { AppContext } from '../../contexts/AppContext'
+import { GoldAbi } from '../abis/goldABI'
+import { SilverAbi } from '../abis/silverABI'
+import { FarmAbi } from '../abis/farmContractAbi'
+import { FarmContractAddress } from '../contractaddress/exportaddress'
+
+import { SilverokenContractAddress } from '../contractaddress/exportaddress'
+import { GoldTokenContractAddress } from '../contractaddress/exportaddress'
 
 function Bank() {
+  const {
+    getProviderOrSigner,
+    connected,
+    Contract,
+} = useContext(AppContext)
     const [symbolFrom, setSymbolFrom] = useState(0);
   const [symbolTo, setSymbolTO] = useState(0);
   const [choice, setChoice] = useState(0);
-  const [count, setCount] = useState(0)
+  const [amount, setAmount] = useState('');
   const cryptos =[
     'Mantle Token','Gold Token','Silver Token'
 ]
@@ -23,42 +36,85 @@ const options =[
     0,1,2 , //BIT , Gold ,Silver
   ]
   // const [connected, setConnected] = useState(false)
+  const handleInputChange = (event) => {
+    setAmount(event.target.value);
+  }
   const handleOptionChange = (event) => {
     setSymbolFrom(event.target.value)
  setChoice(options[event.target.value])
     
   }
   
-  const web3ModalRef = useRef();
-  const getProviderOrSigner = async (needSigner = false)=>{
+  const depoistTokens = async()=>{
     try{
-        const provider = await web3ModalRef.current.connect();
-        const web3Provider = new providers.Web3Provider(provider);
-        const {chainId}  = await web3Provider.getNetwork();
-        if(chainId !=5001){
-            alert("please connect to The Mantle Network")
-        }
-        
-        if(needSigner){
-            const signer = await  web3Provider.getSigner();
-            return signer;
-        }
-        return web3Provider;
+      const valueInWei = ethers.utils.parseEther(amount); 
+      const tokenamount = parseInt(amount)
+      const signer = await getProviderOrSigner(true);
 
-    }catch(error){
-        console.log(error);
-    }
-}
-useEffect(()=>{
-web3ModalRef.current =new Web3Modal({
-    network: "mantle",
-    providerOptions: {},
-    disableInjectedProvider: false,
-    cacheProvider: false,
-  });
-  getProviderOrSigner();
+      
+      
+        const farmContract = new Contract(FarmContractAddress,FarmAbi,signer);
+        if(choice  === 0){
+           const transaction = await farmContract.depositEthToken({value: valueInWei});
+           await transaction.wait();
+          
+        }
+        else if(choice === 1){
+          const transaction = await farmContract.depositGoldToken(tokenamount);
+           await transaction.wait();
+          
+        }
+        else if(choice === 2){
+          const transaction = await farmContract.depositSilverToken(tokenamount);
+           await transaction.wait();
+          
+  
+        }
+        else{
+          alert("please select token")
+        }
+  
+  
+  }catch(error){
+      console.log("failed to mint gold token",error);
+  }
+  }
+  
+  const borrowTokens = async()=>{
+    try{
+      const valueInWei = ethers.utils.parseEther(amount); 
+      const tokenamount = parseInt(amount)
+      const signer = await getProviderOrSigner(true);
 
-},[])
+      
+      
+        const farmContract = new Contract(FarmContractAddress,FarmAbi,signer);
+        if(choice  === 0){
+           const transaction = await farmContract.borrowEthToken({value: valueInWei});
+           await transaction.wait();
+          
+        }
+        else if(choice === 1){
+          const transaction = await farmContract.borrowGoldToken(tokenamount);
+           await transaction.wait();
+          
+        }
+        else if(choice === 2){
+          const transaction = await farmContract.borrowSilverToken(tokenamount);
+           await transaction.wait();
+          
+  
+        }
+        else{
+          alert("please select token")
+        }
+  
+  
+  }catch(error){
+      console.log("failed to mint gold token",error);
+  }
+  }
+  
 
   return (
    
@@ -85,22 +141,24 @@ web3ModalRef.current =new Web3Modal({
     <div className="mb-4">
       <label className="block text-gray-700 font-bold mb-2" >
         Amount
+        {console.log("the amount", amount)}
       </label>
       <input
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        
+        onChange={handleInputChange} 
+        value={amount}
         type="text"
         placeholder="Enter amount"
       />
     </div>
     <div className="flex items-center justify-between gap-2">
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+      <button onClick={()=>{depoistTokens()}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
         Deposit
       </button>
-      <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-        Withdraw
+      <button >
+        
       </button>
-      <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+      <button  onClick={()=>{borrowTokens()}} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
         Borrow
       </button>
     </div>

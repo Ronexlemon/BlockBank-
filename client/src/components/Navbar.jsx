@@ -22,7 +22,7 @@ const NavBar =()=>{
         try{
             const signer = await getProviderOrSigner(true);
             const goldContract = new Contract(GoldTokenContractAddress,GoldAbi,signer);
-            await goldContract.mintGoldTokens(FarmContractAddress,10000);
+            await goldContract.mintGoldTokens(FarmContractAddress,1000000000000);
 
 
         }catch(error){
@@ -33,7 +33,7 @@ const NavBar =()=>{
         try{
             const signer = await getProviderOrSigner(true);
             const silverContract = new Contract(SilverokenContractAddress,SilverAbi,signer);
-            await silverContract.mintSilverTokens(FarmContractAddress,10000);
+            await silverContract.mintSilverTokens(FarmContractAddress,1000000000000);
 
 
         }catch(error){
@@ -80,15 +80,16 @@ return(
                 Swap
 
             </button>
+           
             <button onClick={()=>{navigate("/bank")}}>
                 <CiBank size={20}/>
                 
             </button>
            
-            <span>
-                Buy Crypto
+            <button onClick={()=>{navigate("/account")}}>
+                Account
                 
-            </span>
+            </button>
             
             </div>
             <div>

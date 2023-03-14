@@ -66,7 +66,10 @@ const Card = () =>{
 
       }
       else if(from == options[1] && to == optionsto[0] ){ //swaping gold for silver
-        const transaction =  await farmContract.swapGoldTokensForSilver(parseInt(amount));
+        const signer = await getProviderOrSigner(true);
+        const goldContract = new Contract(GoldTokenContractAddress,GoldAbi,signer);
+        const approve = await goldContract.approve(FarmContractAddress,ethers.utils.parseEther(amount) )
+        const transaction =  await farmContract.swapGoldTokensForSilver(tokenamount);
         await  transaction.wait();
 
       }

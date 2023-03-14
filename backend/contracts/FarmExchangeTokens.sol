@@ -86,6 +86,29 @@ contract FarmExchangeTokens {
         require(amount > 0, "amount can not be negative");
         goldToken.transfer(address(this), amount);
     }
+//borrow
+ function borrowGoldToken(uint amount) external payable {
+    uint total = goldToken.balanceOf(address(this));
+        require(amount > 0, "amount can not be negative");
+        require(total >=amount,"account is unefficient to transfer that amount");
+        goldToken.transfer(msg.sender, amount);
+    }
+    function borrowSilverToken(uint amount) external payable {
+    uint total = silverToken.balanceOf(address(this));
+        require(amount > 0, "amount can not be negative");
+        require(total >=amount,"account is unefficient to transfer that amount");
+        silverToken.transfer(msg.sender, amount);
+    }
+
+     function borrowEthToken() external payable {
+        uint total = address(this).balance;
+        require(msg.value > 0, "amount can not be negative");
+        require(total >= msg.value,"account is unefficient to transfer that amount");
+        (bool success, ) = msg.sender.call{value: msg.value}("");
+        require(success, "failed Transaction");
+    }
+
+
 
     function getTotasupplyForGold() public view returns (uint) {
         return goldToken.totalSupply();

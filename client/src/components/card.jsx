@@ -1,8 +1,9 @@
-import React,{useState,useContext} from "react"
+import React,{useState,useContext,useEffect} from "react"
 import {MdArrowCircleDown,MdArrowDropDownCircle} from "react-icons/md"
 import Dropdown from 'react-dropdown';
 import ethereum from "../assets/ethereum.png"
 import ethereum2 from "../assets/ethereum2.png"
+import web3 from "web3"
 import silver from "../assets/silver.jpeg"
 import gold from "../assets/gold.jpg"
 import { SilverokenContractAddress } from "../contractaddress/exportaddress";
@@ -20,6 +21,7 @@ const Card = () =>{
   const [choiceto, setChoiceto] = useState(0);
   const [symbolFrom, setSymbolFrom] = React.useState(0);
   const [symbolTo, setSymbolTO] = React.useState(0);
+  const [userBalance,setUserBalance] = useState(0);
   const cryptos =[
       'Mantle Token','Gold Token','Silver Token'
   ]
@@ -38,16 +40,43 @@ const Card = () =>{
   const handleOptionChange = (event) => {
     setSymbolFrom(event.target.value)
      setChoice(options[event.target.value])
+     getUserBalance()
   }
-  const handleOptionChangeTo = (event) => {
+  const handleOptionChangeTo = async(event) => {
     setSymbolTO(event.target.value) 
      setChoiceto(optionsto[event.target.value])
+    await  getUserBalance()
   }
   const {
     getProviderOrSigner,
     connected,
     Contract,
 } = useContext(AppContext)
+const getUserBalance = async()=>{
+  try{
+    const signer = await getProviderOrSigner(true);
+    
+    
+      const farmContract = new Contract(FarmContractAddress,FarmAbi,signer);
+      if(choice  === 0){
+        const bal = await signer.getBalance();
+        setUserBalance(bal/10 **18);
+      }
+      else if(choice === 1){
+        const bal = await farmContract.userGoldTokenBal();
+        setUserBalance(bal);
+      }
+      else if(choice === 2){
+        const bal = await farmContract.userSilverTokenBal();
+        setUserBalance(bal);
+
+      }
+
+
+}catch(error){
+    console.log("failed to mint gold token",error);
+}
+}
   const swapBITforTokens = async(from, to)=>{
     try{
       const valueInWei = ethers.utils.parseEther(amount); 
@@ -97,6 +126,9 @@ const Card = () =>{
    
    
     const defaultCryptos = cryptos[0];
+    useEffect(()=>{
+     getUserBalance()
+    },[])
     return(
         <div className="h-3/4 w-3/4 mt-10  bg-black rounded-2xl  text-white">
             <div className="h-full w-full grid grid-rows-4 rounded-2xl   ">
@@ -123,7 +155,7 @@ const Card = () =>{
       onChange={handleInputChange}  placeholder="$ 30.00"/> 
                   <div className="flex justify-start gap-2">
                     <h5>Balance</h5>
-                    <span>0.79</span>
+                    <span>{Number(userBalance).toString().substring(0,4)}</span>
                     <h3 className="text-blue-500">Max</h3>
                   </div>
                   </div>
@@ -153,12 +185,10 @@ const Card = () =>{
               
                   <div className=" flex flex-col gap-2 m-4">
                   {/* <input className="w-full "  type="text" placeholder="$ 30.00"/>  */}
-                  <span className="bg-gray-500 text-white h-8 rounded"><h4 className="p-2">34</h4></span>
+                  <span className="bg-gray-500 text-white h-8 rounded"><h4 className="p-2">{choice == 0 ? amount *10 :amount}</h4></span>
                   <div className="flex justify-start gap-2">
-                    <h5>Balance</h5>
-                    <span>79</span>
-                    {console.log("otion from",choice)}
-                    {console.log("otion to",choiceto)}
+                   
+                    
                     
                   </div>
                   </div>

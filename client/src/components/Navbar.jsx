@@ -86,10 +86,10 @@ return(
                 
             </button>
            
-            <span>
-                Buy Crypto
+            <button onClick={()=>{navigate("/account")}}>
+                Account
                 
-            </span>
+            </button>
             
             </div>
             <div>

@@ -1,4 +1,4 @@
-import { useState,useRef,useEffect } from 'react'
+import { useState,useRef,useEffect ,useContext} from 'react'
 import Web3Modal from "web3modal"
 import {providers,Contract} from "ethers"
 import NavBar from '../components/Navbar'
@@ -10,12 +10,23 @@ import ethereum from "../assets/ethereum.png"
 
 
 import { AppContext } from '../../contexts/AppContext'
+import { GoldAbi } from '../abis/goldABI'
+import { SilverAbi } from '../abis/silverABI'
+import { FarmContractAddress } from '../contractaddress/exportaddress'
+import { FarmContractAddress } from '../contractaddress/exportaddress'
+import { SilverokenContractAddress } from '../contractaddress/exportaddress'
+import { GoldTokenContractAddress } from '../contractaddress/exportaddress'
 
 function Bank() {
+  const {
+    getProviderOrSigner,
+    connected,
+    Contract,
+} = useContext(AppContext)
     const [symbolFrom, setSymbolFrom] = useState(0);
   const [symbolTo, setSymbolTO] = useState(0);
   const [choice, setChoice] = useState(0);
-  const [count, setCount] = useState(0)
+  const [amount, setAmount] = useState('');
   const cryptos =[
     'Mantle Token','Gold Token','Silver Token'
 ]
@@ -23,42 +34,17 @@ const options =[
     0,1,2 , //BIT , Gold ,Silver
   ]
   // const [connected, setConnected] = useState(false)
+  const handleInputChange = (event) => {
+    setAmount(event.target.value);
+  }
   const handleOptionChange = (event) => {
     setSymbolFrom(event.target.value)
  setChoice(options[event.target.value])
     
   }
   
-  const web3ModalRef = useRef();
-  const getProviderOrSigner = async (needSigner = false)=>{
-    try{
-        const provider = await web3ModalRef.current.connect();
-        const web3Provider = new providers.Web3Provider(provider);
-        const {chainId}  = await web3Provider.getNetwork();
-        if(chainId !=5001){
-            alert("please connect to The Mantle Network")
-        }
-        
-        if(needSigner){
-            const signer = await  web3Provider.getSigner();
-            return signer;
-        }
-        return web3Provider;
-
-    }catch(error){
-        console.log(error);
-    }
-}
-useEffect(()=>{
-web3ModalRef.current =new Web3Modal({
-    network: "mantle",
-    providerOptions: {},
-    disableInjectedProvider: false,
-    cacheProvider: false,
-  });
-  getProviderOrSigner();
-
-},[])
+  
+  
 
   return (
    
@@ -85,10 +71,12 @@ web3ModalRef.current =new Web3Modal({
     <div className="mb-4">
       <label className="block text-gray-700 font-bold mb-2" >
         Amount
+        {console.log("the amount", amount)}
       </label>
       <input
         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        
+        onChange={handleInputChange} 
+        value={amount}
         type="text"
         placeholder="Enter amount"
       />

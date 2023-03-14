@@ -1,12 +1,47 @@
 import React,{useState, useRef,useEffect,useContext} from "react";
+import { useNavigate } from "react-router-dom";
 import Web3Modal from "web3modal"
+
+import {CiBank} from "react-icons/ci"
 import {providers,Contract} from "ethers"
 import { AppContext } from "../../contexts/AppContext";
+import { SilverokenContractAddress } from "../contractaddress/exportaddress";
+import { GoldTokenContractAddress } from "../contractaddress/exportaddress";
+import { FarmContractAddress } from "../contractaddress/exportaddress";
+import { SilverAbi } from "../abis/silverABI";
+import { GoldAbi } from "../abis/goldABI";
+import { FarmAbi } from "../abis/farmContractAbi";
 const NavBar =()=>{
+    const navigate = useNavigate();
     const {
         getProviderOrSigner,
         connected,
+        Contract,
     } = useContext(AppContext)
+    const mintGoldToken = async()=>{
+        try{
+            const signer = await getProviderOrSigner(true);
+            const goldContract = new Contract(GoldTokenContractAddress,GoldAbi,signer);
+            await goldContract.mintGoldTokens(FarmContractAddress,10000);
+
+
+        }catch(error){
+            console.log("failed to mint gold token",error);
+        }
+    }
+    const mintSilverToken = async()=>{
+        try{
+            const signer = await getProviderOrSigner(true);
+            const silverContract = new Contract(SilverokenContractAddress,SilverAbi,signer);
+            await silverContract.mintSilverTokens(FarmContractAddress,10000);
+
+
+        }catch(error){
+            console.log("failed to mint silver token",error);
+        }
+    }
+    
+    
     // const [connected, setConnected] = useState(false)
     // const web3ModalRef = useRef();
 
@@ -37,18 +72,19 @@ useEffect(()=>{
 
 return(
     <div className="h-16 w-screen flex flex-auto justify-around items-center border-b border-gray-100 ">
-        <div>
-
+        <div className="text-white">
+        <button onClick={()=>{navigate("/home")}}>Home</button>
         </div>
         <div className=" flex flex-row justify-evenly w-80 text-white  ">
-            <span>
+            <button onClick={()=>{navigate("/swap")}}>
                 Swap
-{console.log("connected is",connected)}
-            </span>
-            <span>
-                Earn
+
+            </button>
+            <button onClick={()=>{navigate("/bank")}}>
+                <CiBank size={20}/>
                 
-            </span>
+            </button>
+           
             <span>
                 Buy Crypto
                 

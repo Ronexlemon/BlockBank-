@@ -1,4 +1,5 @@
 import React,{useState, useRef,useEffect,useContext} from "react";
+import { useNavigate } from "react-router-dom";
 import Web3Modal from "web3modal"
 import {providers,Contract} from "ethers"
 import { AppContext } from "../../contexts/AppContext";
@@ -9,6 +10,7 @@ import { SilverAbi } from "../abis/silverABI";
 import { GoldAbi } from "../abis/goldABI";
 import { FarmAbi } from "../abis/farmContractAbi";
 const NavBar =()=>{
+    const navigate = useNavigate();
     const {
         getProviderOrSigner,
         connected,
@@ -68,8 +70,8 @@ useEffect(()=>{
 
 return(
     <div className="h-16 w-screen flex flex-auto justify-around items-center border-b border-gray-100 ">
-        <div>
-
+        <div className="text-white">
+        <button onClick={()=>{navigate("/home")}}>Home</button>
         </div>
         <div className=" flex flex-row justify-evenly w-80 text-white  ">
             <span>

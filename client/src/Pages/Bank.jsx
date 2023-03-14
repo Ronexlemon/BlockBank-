@@ -1,13 +1,16 @@
-import React,{useState,useRef,useEffect} from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './Pages/LandingPage';
-import Swap from './Pages/Swap';
-import Bank from './Pages/Bank';
+import { useState,useRef,useEffect } from 'react'
 import Web3Modal from "web3modal"
 import {providers,Contract} from "ethers"
-import { AppContext } from '../contexts/AppContext';
+import NavBar from '../components/Navbar'
+import BackImage from '../components/backimage'
 
-function App() {
+
+import { AppContext } from '../../contexts/AppContext'
+import BankPage from '../components/bankpage'
+
+function Bank() {
+  const [count, setCount] = useState(0)
+  // const [connected, setConnected] = useState(false)
   const useLocalStorage = (key, initialValue) => {
     const [value, setValue] = useState(() => {
       const storedValue = window.localStorage.getItem(key);
@@ -51,24 +54,16 @@ web3ModalRef.current =new Web3Modal({
   });
 
 },[])
+
   return (
-    <AppContext.Provider value={{
-      getProviderOrSigner,
-      connected,
-      Contract,
+   
+<main className=" bg-[#182268] h-screen ">
+    <NavBar/>
+<BankPage/>
       
-    }}>
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage/>} />
-        <Route path="/home" element={<LandingPage/>} />
-        <Route path="/swap" element={<Swap/>} />
-        <Route path="/bank" element={<Bank/>} />
-      </Routes>
-    </Router>
-    </AppContext.Provider>
-  );
-  
+        
+    </main>
+  )   
 }
 
-export default App;
+export default Bank;

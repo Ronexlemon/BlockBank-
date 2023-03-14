@@ -18,7 +18,7 @@ return(
        
             <div>
                 
-            <button   onClick={()=>{navigate("/swap")}}  className=" bg-green-700 text-black rounded-2xl h-10 w-fit px-4 text-sm ">Get Started</button>
+            <button   onClick={()=>{navigate("/swap")}}  className=" bg-orange-700 text-white rounded-2xl h-10 w-fit px-4 text-sm ">Get Started</button>
                 
                 
             

@@ -1,6 +1,8 @@
 import React,{useState, useRef,useEffect,useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import Web3Modal from "web3modal"
+
+import {CiBank} from "react-icons/ci"
 import {providers,Contract} from "ethers"
 import { AppContext } from "../../contexts/AppContext";
 import { SilverokenContractAddress } from "../contractaddress/exportaddress";
@@ -74,14 +76,14 @@ return(
         <button onClick={()=>{navigate("/home")}}>Home</button>
         </div>
         <div className=" flex flex-row justify-evenly w-80 text-white  ">
-            <span>
+            <button onClick={()=>{navigate("/swap")}}>
                 Swap
-{console.log("connected is",SilverokenContractAddress)}
-            </span>
-            <span>
-                Earn
+
+            </button>
+            <button onClick={()=>{navigate("/bank")}}>
+                <CiBank size={20}/>
                 
-            </span>
+            </button>
            
             <span>
                 Buy Crypto
